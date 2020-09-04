@@ -24,11 +24,13 @@ def get_session():
 
 def get_remaining_meals(s: Session):
     page = bs(s.get(meal_url).content, 'html.parser')
-    status = page.find('td', attrs={'data-title': 'Status:'})
-    meals = re.search(r'.*=([0-9]+)', status.text).group(1)
-    return meals
+    status = page.find_all('td', attrs={'data-title': 'Status:'})
+    any10 = re.search(r'.*=([0-9]+)', status[0].text).group(1)
+    meal50 = re.search(r'.*= ([0-9]+)', status[1].text).group(1)
+    return any10, meal50
 
 if __name__ == "__main__":
     meals = get_remaining_meals(get_session())
-    print('Meals remaining for this week: ', meals)
+    print('Meals remaining for this week: ', meals[0])
+    print('Meals remaining for this semester: ', meals[1])
 
